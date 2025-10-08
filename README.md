@@ -6,7 +6,7 @@
 
 - <https://github.com/PINTO0309/PINTO_model_zoo/tree/main/462_Gaze-LLE>
 
-- <https://github.com/PINTO0309/PINTO_model_zoo/tree/main/468_YOLOv9-Wholebody28-Refine>
+- <https://github.com/PINTO0309/BoT-SORT-ONNX-TensorRT>
 
 - マージして作成したファイル
 
