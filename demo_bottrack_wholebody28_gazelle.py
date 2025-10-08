@@ -1972,7 +1972,7 @@ class BoTSORT(object):
                 hand1=None,
                 hand2=None,
                 is_used=False,
-            ) for box in detected_boxes if box.classid == 0 # Body
+            ) for box in detected_boxes if box.classid == 0 or box.classid == 5 or box.classid == 6 # Body
         ]
 
         # Generate Head object
@@ -2008,7 +2008,7 @@ class BoTSORT(object):
                 cy=box.cy,
                 is_used=False,
                 box=box,
-            ) for box in detected_boxes if box.classid == 23 # Hand
+            ) for box in detected_boxes if box.classid == 23 or box.classid == 24 or box.classid == 25 # Hand
         ]
 
         # Generate Face object
@@ -3025,6 +3025,7 @@ def main():
                 disable_left_and_right_hand_identification_mode=False,
                 disable_headpose_identification_mode=False,
             )
+
         # Gaze-LLE
         head_boxes = [box for box in boxes if box.classid == 7]
         heatmaps = []
@@ -3060,13 +3061,16 @@ def main():
             y, x = np.unravel_index(max_index, heatmap.shape)
             return int(x), int(y), heatmap[y, x]
 
+        # Bot-SORT
+        stracks = botsort.update(image=debug_image, detected_boxes=boxes)
+
+        # Gaze
         gazes = []
         for head_box, heatmap in zip(head_boxes, heatmaps):
             cx, cy, score = calculate_centroid(heatmap)
             if score >= centroid_socre_threshold:
                 gazes.append(Gaze(head_box.trackid, head_box.cx, head_box.cy, cx, cy))
-        # Bot-SORT
-        stracks = botsort.update(image=debug_image, detected_boxes=boxes)
+
         elapsed_time = time.perf_counter() - start_time
 
         # Writing the dictionary to a JSON file
